@@ -13,7 +13,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - Stored Properties
 
     let behindEveryNode: CGFloat = -1.0
+    
     var goodOrBad = true
+    
+    var scoreLabelNode: SKLabelNode!
+    var score = 0 {
+        didSet {
+            scoreLabelNode.text = "Score: \(score)"
+        }
+    }
+    
+    var editLabelNode: SKLabelNode!
+    var editingMode = false {
+        didSet {
+            editLabelNode.text = editingMode ? "Done" : "Edit"
+        }
+    }
     
     // MARK: - Method Overrides
     
@@ -40,25 +55,60 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for var i: CGFloat = 0.0; i <= 1024.0; i += 256.0 {
             self.makeBouncerSpriteNodeAt(CGPointMake(i, 0))
         }
+        
+        //************
+        // Mark: Score
+        //************
+        
+        self.scoreLabelNode = SKLabelNode(fontNamed: "Chalkduster")
+        self.scoreLabelNode.text = "Score: 0"
+        self.scoreLabelNode.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Right
+        self.scoreLabelNode.position = CGPointMake(980, 700)
+        self.addChild(self.scoreLabelNode)
+        
+        //****************
+        // Mark: Edit Mode
+        //****************
+        
+        self.editLabelNode = SKLabelNode(fontNamed: "Chalkduster")
+        self.editLabelNode.text = "Edit"
+        self.editLabelNode.position = CGPointMake(80, 700)
+        self.addChild(self.editLabelNode)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        //***********
-        // Mark: Ball
-        //***********
+        //**********************
+        // Mark: Ball & Obstacle
+        //**********************
         
         if let touch = touches.first  {
             let locationOfTouch = touch.locationInNode(self)
-            let ballSpriteNode = SKSpriteNode(imageNamed: "ballRed")
-            ballSpriteNode.name = "ball"
-            ballSpriteNode.physicsBody = SKPhysicsBody(circleOfRadius: ballSpriteNode.size.width / 2.0)
-            ballSpriteNode.physicsBody!.contactTestBitMask = ballSpriteNode.physicsBody!.collisionBitMask
-            ballSpriteNode.physicsBody!.restitution = 0.4
-            ballSpriteNode.position = locationOfTouch
-            self.addChild(ballSpriteNode)
+            let arrayOfNodes = self.nodesAtPoint(locationOfTouch)
+            if arrayOfNodes.contains(self.editLabelNode) {
+                self.editingMode = !self.editingMode
+            }
+            else if self.editingMode {
+                // create obstacle
+                let boxSize = CGSize(width: RandomInt(16, max: 128), height: 16)
+                let boxSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
+                boxSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
+                boxSpriteNode.position = locationOfTouch
+                boxSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: boxSpriteNode.size)
+                boxSpriteNode.physicsBody!.dynamic = false
+                self.addChild(boxSpriteNode)
+            }
+            else {
+                // create ball
+                let ballSpriteNode = SKSpriteNode(imageNamed: "ballRed")
+                ballSpriteNode.name = "ball"
+                ballSpriteNode.physicsBody = SKPhysicsBody(circleOfRadius: ballSpriteNode.size.width / 2.0)
+                ballSpriteNode.physicsBody!.contactTestBitMask = ballSpriteNode.physicsBody!.collisionBitMask
+                ballSpriteNode.physicsBody!.restitution = 0.4
+                ballSpriteNode.position = locationOfTouch
+                self.addChild(ballSpriteNode)
+            }
         }
-        
     }
    
     override func update(currentTime: CFTimeInterval) {
@@ -108,7 +158,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func collideWithBall(ball: SKNode, object: SKNode) {
-        if object.name == "good" || object.name == "bad" { destroyBall(ball) }
+        if object.name == "good" {
+            self.destroyBall(ball)
+            ++self.score
+        }
+        else if object.name == "bad" {
+            self.destroyBall(ball)
+            --self.score
+        }
     }
     
     func destroyBall(ball: SKNode) { ball.removeFromParent() }

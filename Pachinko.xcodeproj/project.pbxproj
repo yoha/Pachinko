@@ -42,6 +42,7 @@
 		65225E5F1B888F4500465B32 /* slotGlowGood.png in Resources */ = {isa = PBXBuildFile; fileRef = 65225E431B888F4500465B32 /* slotGlowGood.png */; };
 		65225E601B888F4500465B32 /* slotGlowGood@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65225E441B888F4500465B32 /* slotGlowGood@2x.png */; };
 		65225E611B888F4500465B32 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 65225E451B888F4500465B32 /* spark.png */; };
+		65EAB4211B8D9AFD00AB3323 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EAB4201B8D9AFD00AB3323 /* Helper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,7 @@
 		65225E431B888F4500465B32 /* slotGlowGood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = slotGlowGood.png; sourceTree = "<group>"; };
 		65225E441B888F4500465B32 /* slotGlowGood@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slotGlowGood@2x.png"; sourceTree = "<group>"; };
 		65225E451B888F4500465B32 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spark.png; sourceTree = "<group>"; };
+		65EAB4201B8D9AFD00AB3323 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 				65225E1E1B8881DF00465B32 /* Assets.xcassets */,
 				65225E291B888F4500465B32 /* Images */,
 				65225E201B8881DF00465B32 /* LaunchScreen.storyboard */,
+				65EAB4201B8D9AFD00AB3323 /* Helper.swift */,
 				65225E231B8881DF00465B32 /* Info.plist */,
 			);
 			path = Pachinko;
@@ -265,6 +268,7 @@
 				65225E181B8881DF00465B32 /* GameScene.swift in Sources */,
 				65225E1A1B8881DF00465B32 /* GameViewController.swift in Sources */,
 				65225E141B8881DF00465B32 /* AppDelegate.swift in Sources */,
+				65EAB4211B8D9AFD00AB3323 /* Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,6 +418,7 @@
 				65225E281B8881DF00465B32 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
