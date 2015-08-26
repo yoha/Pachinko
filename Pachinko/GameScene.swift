@@ -168,5 +168,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func destroyBall(ball: SKNode) { ball.removeFromParent() }
+    func destroyBall(ball: SKNode) {
+        if let myParticlePath = NSBundle.mainBundle().pathForResource("FireParticles", ofType: "sks") {
+            let fireParticles = NSKeyedUnarchiver.unarchiveObjectWithFile(myParticlePath) as! SKEmitterNode
+            fireParticles.position = ball.position
+            self.addChild(fireParticles)
+        }
+        
+        ball.removeFromParent()
+    }
 }
