@@ -30,6 +30,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    let balls = ["ballBlue", "ballCyan", "ballGreen", "ballGrey", "ballPurple", "ballYellow", "ballRed"]
+    
     // MARK: - Method Overrides
     
     override func didMoveToView(view: SKView) {
@@ -100,12 +102,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             else {
                 // create ball
-                let ballSpriteNode = SKSpriteNode(imageNamed: "ballRed")
+                let randomBallColor = self.balls[RandomInt(0, max: 6)]
+                let ballSpriteNode = SKSpriteNode(imageNamed: randomBallColor)
                 ballSpriteNode.name = "ball"
                 ballSpriteNode.physicsBody = SKPhysicsBody(circleOfRadius: ballSpriteNode.size.width / 2.0)
                 ballSpriteNode.physicsBody!.contactTestBitMask = ballSpriteNode.physicsBody!.collisionBitMask
                 ballSpriteNode.physicsBody!.restitution = 0.4
-                ballSpriteNode.position = locationOfTouch
+                ballSpriteNode.position = CGPointMake(locationOfTouch.x, self.frame.size.height)
                 self.addChild(ballSpriteNode)
             }
         }
