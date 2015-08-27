@@ -5,6 +5,8 @@
 //  Created by Yohannes Wijaya on 8/22/15.
 //  Copyright (c) 2015 Yohannes Wijaya. All rights reserved.
 //
+//  Todo: 0) fix removing obstacle 1) Create rounder corners on generated obstacle boxes. 2) Add icon.
+
 
 import SpriteKit
 
@@ -16,14 +18,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var goodOrBad = true
     
-    var scoreLabelNode: SKLabelNode!
     var score = 0 {
         didSet {
             scoreLabelNode.text = "Score: \(score)"
         }
     }
-    
+    var scoreLabelNode: SKLabelNode!
     var editLabelNode: SKLabelNode!
+    
+    var boxSpriteNode: SKSpriteNode!
+    
     var editingMode = false {
         didSet {
             editLabelNode.text = editingMode ? "Done" : "Edit"
@@ -76,6 +80,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.editLabelNode.text = "Edit"
         self.editLabelNode.position = CGPointMake(80, 700)
         self.addChild(self.editLabelNode)
+        
+        //****************
+        // Mark: Obstacle
+        //****************
+        
+        self.boxSpriteNode = SKSpriteNode()
+//        self.addChild(self.boxSpriteNode)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -86,19 +97,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if let touch = touches.first  {
             let locationOfTouch = touch.locationInNode(self)
-            let arrayOfNodes = self.nodesAtPoint(locationOfTouch)
-            if arrayOfNodes.contains(self.editLabelNode) {
+            let arrayOfNodesAtTouchLocation = self.nodesAtPoint(locationOfTouch)
+            if arrayOfNodesAtTouchLocation.contains(self.editLabelNode) {
                 self.editingMode = !self.editingMode
             }
             else if self.editingMode {
-                // create obstacle
-                let boxSize = CGSize(width: RandomInt(16, max: 128), height: 16)
-                let boxSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
-                boxSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
-                boxSpriteNode.position = locationOfTouch
-                boxSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: boxSpriteNode.size)
-                boxSpriteNode.physicsBody!.dynamic = false
-                self.addChild(boxSpriteNode)
+                // remove existing obstacle
+                if arrayOfNodesAtTouchLocation.contains(self.boxSpriteNode) { // <--
+                    for (_, node) in arrayOfNodesAtTouchLocation.enumerate() {
+                        if node.name == "obstacle" { node.removeFromParent() }
+                    }
+                }
+                else {
+                    // create obstacle
+                    let boxSize = CGSize(width: RandomInt(16, max: 128), height: 16)
+                    self.boxSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
+                    self.boxSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
+                    self.boxSpriteNode.position = locationOfTouch
+                    self.boxSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: boxSpriteNode.size)
+                    self.boxSpriteNode.physicsBody!.dynamic = false
+                    self.boxSpriteNode.name = "obstacle"
+                    self.addChild(self.boxSpriteNode)
+                    
+                    // create rounded border
+//                    let cropNode = SKCropNode()
+//                    let maskShapeNode = SKShapeNode()
+//                    maskShapeNode.path = CGPathCreateWithRoundedRect(CGRectMake(locationOfTouch.x, locationOfTouch.y, boxSize.width, boxSize.height), 1.0, 1.0, nil)
+//                    maskShapeNode.fillColor = UIColor.greenColor()
+//                    cropNode.maskNode = maskShapeNode
+//                    cropNode.addChild(self.boxSpriteNode)
+//                    self.addChild(cropNode)
+//                    http://stackoverflow.com/questions/21695305/skspritenode-create-a-round-corner-node?lq=1
+                }
             }
             else {
                 // create ball
