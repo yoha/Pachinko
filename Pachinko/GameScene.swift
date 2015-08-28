@@ -5,7 +5,7 @@
 //  Created by Yohannes Wijaya on 8/22/15.
 //  Copyright (c) 2015 Yohannes Wijaya. All rights reserved.
 //
-//  Todo: 0) fix removing obstacle 1) Create rounder corners on generated obstacle boxes. 2) Add icon.
+//  Todo: 1) Create rounder corners on generated obstacle boxes. 2) Add icon.
 
 
 import SpriteKit
@@ -44,7 +44,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         
         //*****************
-        // Mark: Background
+        // MARK: Background
         //*****************
         
         let backgroundSpriteNode = SKSpriteNode(imageNamed: "background.jpg")
@@ -63,7 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         //************
-        // Mark: Score
+        // MARK: Score
         //************
         
         self.scoreLabelNode = SKLabelNode(fontNamed: "Chalkduster")
@@ -73,7 +73,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.scoreLabelNode)
         
         //****************
-        // Mark: Edit Mode
+        // MARK: Edit Mode
         //****************
         
         self.editLabelNode = SKLabelNode(fontNamed: "Chalkduster")
@@ -82,19 +82,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.editLabelNode)
         
         //****************
-        // Mark: Obstacle
+        // MARK: Obstacle
         //****************
         
         self.boxSpriteNode = SKSpriteNode()
-//        self.addChild(self.boxSpriteNode)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        
-        //**********************
-        // Mark: Ball & Obstacle
-        //**********************
-        
         if let touch = touches.first  {
             let locationOfTouch = touch.locationInNode(self)
             let arrayOfNodesAtTouchLocation = self.nodesAtPoint(locationOfTouch)
@@ -102,23 +96,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.editingMode = !self.editingMode
             }
             else if self.editingMode {
+                
+                //****************
+                // MARK: Obstacle
+                //****************
+                
                 // remove existing obstacle
-                if arrayOfNodesAtTouchLocation.contains(self.boxSpriteNode) { // <--
-                    for (_, node) in arrayOfNodesAtTouchLocation.enumerate() {
-                        if node.name == "obstacle" { node.removeFromParent() }
+                let possibleTargetSpriteNode = self.nodeAtPoint(locationOfTouch)
+                if arrayOfNodesAtTouchLocation.contains(possibleTargetSpriteNode) {
+                    if possibleTargetSpriteNode.name == "obstacle" { self.removeChildrenInArray([possibleTargetSpriteNode]) }
+                    else {
+                        // create obstacle
+                        let boxSize = CGSize(width: RandomInt(16, max: 128), height: 16)
+                        self.boxSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
+                        self.boxSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
+                        self.boxSpriteNode.position = locationOfTouch
+                        self.boxSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: boxSpriteNode.size)
+                        self.boxSpriteNode.physicsBody!.dynamic = false
+                        self.boxSpriteNode.name = "obstacle"
+                        self.addChild(self.boxSpriteNode)
                     }
                 }
-                else {
-                    // create obstacle
-                    let boxSize = CGSize(width: RandomInt(16, max: 128), height: 16)
-                    self.boxSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
-                    self.boxSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
-                    self.boxSpriteNode.position = locationOfTouch
-                    self.boxSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: boxSpriteNode.size)
-                    self.boxSpriteNode.physicsBody!.dynamic = false
-                    self.boxSpriteNode.name = "obstacle"
-                    self.addChild(self.boxSpriteNode)
-                    
                     // create rounded border
 //                    let cropNode = SKCropNode()
 //                    let maskShapeNode = SKShapeNode()
@@ -128,10 +126,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //                    cropNode.addChild(self.boxSpriteNode)
 //                    self.addChild(cropNode)
 //                    http://stackoverflow.com/questions/21695305/skspritenode-create-a-round-corner-node?lq=1
-                }
+//                }
             }
             else {
-                // create ball
+                
+                //***********
+                // MARK: Ball
+                //***********
+                
                 let randomBallColor = self.balls[RandomInt(0, max: 6)]
                 let ballSpriteNode = SKSpriteNode(imageNamed: randomBallColor)
                 ballSpriteNode.name = "ball"
@@ -157,7 +159,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Mark: - Custom Methods
     
     //**************
-    // Mark: Bouncer
+    // MARK: Bouncer
     //**************
     
     func makeBouncerSpriteNodeAt(position: CGPoint) {
@@ -170,7 +172,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     //***********
-    // Mark: Slot
+    // MARK: Slot
     //***********
     
     func makeSlotAt(position: CGPoint, isGood: Bool) {
