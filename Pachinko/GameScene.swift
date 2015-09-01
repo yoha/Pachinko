@@ -5,7 +5,6 @@
 //  Created by Yohannes Wijaya on 8/22/15.
 //  Copyright (c) 2015 Yohannes Wijaya. All rights reserved.
 //
-//  Todo: 1) Create rounder corners on generated obstacle boxes.
 
 
 import SpriteKit
@@ -26,7 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabelNode: SKLabelNode!
     var editLabelNode: SKLabelNode!
     
-    var boxSpriteNode: SKSpriteNode!
+    var obstacleSpriteNode: SKSpriteNode!
     
     var editingMode = false {
         didSet {
@@ -85,7 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // MARK: Obstacle
         //****************
         
-        self.boxSpriteNode = SKSpriteNode()
+        self.obstacleSpriteNode = SKSpriteNode()
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -108,25 +107,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     else {
                         // create obstacle
                         let boxSize = CGSize(width: RandomInt(16, max: 128), height: 16)
-                        self.boxSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
-                        self.boxSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
-                        self.boxSpriteNode.position = locationOfTouch
-                        self.boxSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: boxSpriteNode.size)
-                        self.boxSpriteNode.physicsBody!.dynamic = false
-                        self.boxSpriteNode.name = "obstacle"
-                        self.addChild(self.boxSpriteNode)
+                        self.obstacleSpriteNode = SKSpriteNode(color: RandomColor(), size: boxSize)
+                        self.obstacleSpriteNode.zRotation = RandomCGFloat(0.0, max: 3.0)
+                        self.obstacleSpriteNode.position = locationOfTouch
+                        self.obstacleSpriteNode.physicsBody = SKPhysicsBody(rectangleOfSize: obstacleSpriteNode.size)
+                        self.obstacleSpriteNode.physicsBody!.dynamic = false
+                        self.obstacleSpriteNode.name = "obstacle"
+                        self.addChild(self.obstacleSpriteNode)
                     }
                 }
-                    // create rounded border
-//                    let cropNode = SKCropNode()
-//                    let maskShapeNode = SKShapeNode()
-//                    maskShapeNode.path = CGPathCreateWithRoundedRect(CGRectMake(locationOfTouch.x, locationOfTouch.y, boxSize.width, boxSize.height), 1.0, 1.0, nil)
-//                    maskShapeNode.fillColor = UIColor.greenColor()
-//                    cropNode.maskNode = maskShapeNode
-//                    cropNode.addChild(self.boxSpriteNode)
-//                    self.addChild(cropNode)
-//                    http://stackoverflow.com/questions/21695305/skspritenode-create-a-round-corner-node?lq=1
-//                }
             }
             else {
                 
