@@ -5,7 +5,7 @@
 //  Created by Yohannes Wijaya on 8/22/15.
 //  Copyright (c) 2015 Yohannes Wijaya. All rights reserved.
 //
-//  Todo: 1) Create rounder corners on generated obstacle boxes. 2) Add icon.
+//  Todo: 1) Create rounder corners on generated obstacle boxes.
 
 
 import SpriteKit
@@ -187,7 +187,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         slotGlow.position = position
         self.addChild(slotGlow)
         
-        let slotSpinAction = SKAction.rotateByAngle(CGFloat(M_PI_2), duration: 10.0)
+        let slotSpinAction = SKAction.rotateByAngle(CGFloat(M_PI_2), duration: 3.0)
         let slotSpinRepeatForeverAction = SKAction.repeatActionForever(slotSpinAction)
         slotGlow.runAction(slotSpinRepeatForeverAction)
     }
